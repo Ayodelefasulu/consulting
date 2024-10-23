@@ -1,0 +1,16 @@
+{% extends "public/base.html" %}
+{% block title %}Public sector{% endblock %}
+{% block content %}
+ <h1>My public space</h1>
+  {% for p in public %}
+  <h2>
+   <a href="{% url 'public:public_detail' p.id %}">
+    {{ p.project_title }}
+   </a>
+  </h2>
+   <p class="date">
+    Public projects handled {{ p.created }} by {{ p.username }}
+   </p>
+  {{ public.description|truncatewords:30|linebreaks }}
+  {% endfor %}
+{% endblock %}
