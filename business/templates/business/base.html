@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+ <title>{% block title %}{% endblock %}</title>
+ <link href="{% static "css/buisness.css" %}" rel="stylesheet">
+</head>
+<body>
+ <div id="content">
+  {% block content %}
+  {% endblock %}
+ </div>
+ <div id="sidebar">
+  <h2>My Business Analytics</h2>
+  <p>This is my business analytics page</p>
+ </div>
+</body>
+</html>

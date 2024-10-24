@@ -1,0 +1,16 @@
+{% extends "academics/base.html" %}
+{% block title %}Academic Projects{% endblock %}
+{% block content %}
+ <h1>My academics space</h1>
+  {% for a in academics %}
+  <h2>
+   <a href="{% url 'academics:academics_detail' a.id %}">
+    {{ a.project_title }}
+   </a>
+  </h2>
+   <p class="date">
+    Academic projects handled {{ a.created }} by {{ a.username }}
+   </p>
+  {{ a.description|truncatewords:30|linebreaks }}
+  {% endfor %}
+{% endblock %}

@@ -6,6 +6,7 @@ from django.utils import timezone
 
 # dropdown options for industry field
 INDUSTRY_CHOICES = [
+    ('no', '-------'),
     ('agriculture', 'Agriculture'), ('aerospace', 'Aerospace'),
     ('automotive', 'Automotive'), ('chemicals', 'Chemicals'),
     ('construction', 'Construction'), ('manufacturing', 'Manufacturing'),
@@ -23,6 +24,12 @@ INDUSTRY_CHOICES = [
     ('others', 'Others'),
 ]
 
+STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+    ('completed', 'Completed'),
+]
 
 # The main Business model
 class Business(models.Model):
@@ -35,13 +42,12 @@ class Business(models.Model):
 
     # class-based dropdown options for type-of-service field
     class ServiceType(models.TextChoices):
-        PROJECT_MANAGEMENT = 'PM', 'Project Management'
-        RESEARCH_POLICY = 'RP', 'Research and Policy Development'
-        DATA_ANALYSIS = 'DA', 'Data Analysis and Management'
-        MONITORING_EVALUATION = 'ME', 'Monitoring and Evaluation'
-        STAKEHOLDER_ENGAGEMENT = 'SE', 'Stakeholder Engagement and Advocacy'
-        CAPACITY_BUILDING = 'CB', 'Capacity Building and Training'
-        OTHERS = 'OT', 'Others'
+        NONE = 'NO', '-------'
+        CUSTOMER_PREFERENCE = 'CP', 'Customer Preference and Sentiment Analysis'
+        PRICE_PREDICTION = 'PP', 'Price/Stock Prediction and Fluctuation Analysis'
+        HUMAN_RESOURCES = 'HR', 'Human Resources Analysis'
+        BUSINESS_PROPOSAL = 'BP', 'Business Proposal Writing'
+        OTHERS = 'OT', 'Other Business Analytics Services'
 
     username = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -49,12 +55,14 @@ class Business(models.Model):
         related_name='business_analytics'
     )
     business_name = models.CharField(max_length=250)
-    industry = models.CharField(max_length=50, choices=INDUSTRY_CHOICES, default='agriculture')
+    industry = models.CharField(max_length=50, choices=INDUSTRY_CHOICES, default='no')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     type_of_service = models.CharField(
         max_length=2,
         choices=ServiceType.choices,
-        default=ServiceType.PROJECT_MANAGEMENT
+        default=ServiceType.NONE
     )
+    project_description = models.TextField(max_length=5000, default='Describe in few words...')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     deadline = models.DateTimeField(default=timezone.now)
@@ -64,6 +72,12 @@ class Business(models.Model):
         indexes = [
             models.Index(fields=['-type_of_service']),
         ]
+
+    def short_description(self):
+        return (self.project_description[:100] + '...') if len(self.project_description) > 100 else self.project_description
+
+    # Add a human-readable name for the admin
+    # short_description.short_description = 'Project Description'
 
     def __str__(self):
         return f"{self.business_name}'s business"

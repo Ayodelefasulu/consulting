@@ -1,0 +1,16 @@
+{% extends "business/base.html" %}
+{% block title %}Business Analytics projects{% endblock %}
+{% block content %}
+ <h1>My business space</h1>
+  {% for b in business %}
+  <h2>
+   <a href="{% url 'business:business_detail' b.id %}">
+    {{ b.business_name }}
+   </a>
+  </h2>
+   <p class="date">
+    Business analytics projects handled {{ b.created }} by {{ b.username }}
+   </p>
+  {{ b.description|truncatewords:30|linebreaks }}
+  {% endfor %}
+{% endblock %}
